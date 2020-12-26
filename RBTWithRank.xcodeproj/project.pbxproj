@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		80F40DE7259383F900EA4B5D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80F40DE6259383F900EA4B5D /* main.cpp */; };
+		80F40DF025938AB000EA4B5D /* RBTWithRank.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80F40DEE25938AB000EA4B5D /* RBTWithRank.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		80F40DE3259383F900EA4B5D /* RBTWithRank */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RBTWithRank; sourceTree = BUILT_PRODUCTS_DIR; };
 		80F40DE6259383F900EA4B5D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		80F40DEE25938AB000EA4B5D /* RBTWithRank.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RBTWithRank.cpp; sourceTree = "<group>"; };
+		80F40DEF25938AB000EA4B5D /* RBTWithRank.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RBTWithRank.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				80F40DE6259383F900EA4B5D /* main.cpp */,
+				80F40DEE25938AB000EA4B5D /* RBTWithRank.cpp */,
+				80F40DEF25938AB000EA4B5D /* RBTWithRank.hpp */,
 			);
 			path = RBTWithRank;
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80F40DF025938AB000EA4B5D /* RBTWithRank.cpp in Sources */,
 				80F40DE7259383F900EA4B5D /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
