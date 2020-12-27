@@ -7,9 +7,59 @@
 //  Copyright © 2020 Erin Jane Ge. All rights reserved.
 //
 
-#include "RBTWithRank.hpp"
+#include <iostream>
+using namespace std;
 
-void RBT::inorderWalk(Node * p) const {
+template <class T>
+class RBT {
+    private :
+    enum {RED = 0, BLACK};
+    struct Node {
+        T key;
+        bool color;
+        int size;
+        Node * left;
+        Node * right;
+        Node * parent;
+        Node(T k = -9999, bool c = BLACK, int s = 0, Node *l = nullptr, Node *r = nullptr, Node *p = nullptr)
+        : key(k), color(c), size(s), left(l), right(r), parent(p) {}
+    };
+    private :
+    Node * nil;
+    Node * root;
+    private :
+    void leftRotate(Node * x);
+    void rightRotate(Node * x);
+    void fixup_insert(Node * p);
+    void fixup_remove(Node * p);
+    void transplant(Node * old_t, Node * new_t);
+    void insert(Node * p);
+    void erase(Node * p);
+    Node * search(Node * p, const T k);
+    Node * minimum(Node * p);
+    Node * maximum(Node * p);
+    void inorderWalk(Node * p) const;
+    Node * successor(Node * p);
+    Node * predecessor(Node * p);
+    int rank(Node * p);
+    Node * index(Node * p, const int i);
+    public :
+    RBT() : nil(new Node), root(nil) {}
+    ~RBT() {delete nil;}
+    void insert(const T key) {insert(new Node(key, RED, 1, nil, nil, nil));}
+    void erase(const T key) {erase(search(root, key));}
+    bool search(const T key) {return (search(root, key) == nil ? false : true);}
+    T minimum() {return minimum(root)->key;}
+    T maximum() {return maximum(root)->key;}
+    T predecessor(const T key);
+    T successor(const T key);
+    int * rank(const T key);
+    T index(const int i) {return index(root, i)->key;}
+    
+    friend ostream &operator<<(ostream &os, const RBT &t);
+};
+
+template <class T> void RBT<T>::inorderWalk(Node * p) const {
     if (p != nil) {
         inorderWalk(p->left);
         cout << p->key << ' ';
@@ -17,7 +67,7 @@ void RBT::inorderWalk(Node * p) const {
     }
 }
 
-RBT::Node * RBT::search(Node * p, const int k) {
+template <class T> typename RBT<T>::Node * RBT<T>::search(Node * p, const T k) {
     if (p == nil || k == p->key)
         return p;
     if (k < p->key)
@@ -26,7 +76,7 @@ RBT::Node * RBT::search(Node * p, const int k) {
         return search(p->right, k);
 }
 
-RBT::Node * RBT::minimum(Node * p) {
+template <class T> typename RBT<T>::Node * RBT<T>::minimum(Node * p) {
     if (p == nil)
         return p;
     while (p->left != nil)
@@ -34,7 +84,7 @@ RBT::Node * RBT::minimum(Node * p) {
     return p;
 }
 
-RBT::Node * RBT::maximum(Node * p) {
+template <class T> typename RBT<T>::Node * RBT<T>::maximum(Node * p) {
     if (p == nil)
         return p;
     while (p->right != nil)
@@ -42,7 +92,7 @@ RBT::Node * RBT::maximum(Node * p) {
     return p;
 }
 
-RBT::Node * RBT::predecessor(Node * p) {
+template <class T> typename RBT<T>::Node * RBT<T>::predecessor(Node * p) {
     if (p->left != nil)
         return maximum(p->left);
     Node * y = p->parent;
@@ -53,14 +103,14 @@ RBT::Node * RBT::predecessor(Node * p) {
     return y;
 }
 
-int RBT::predecessor(const int k) {
+template <class T> T RBT<T>::predecessor(const T k) {
     Node * p = search(root, k);
     if (p == nil)
         return -9999;
     return predecessor(p)->key;
 }
 
-RBT::Node * RBT::successor(Node * p) {
+template <class T> typename RBT<T>::Node * RBT<T>::successor(Node * p) {
     if (p->right != nil)
         return minimum(p->right);
     Node * y = p->parent;
@@ -71,14 +121,14 @@ RBT::Node * RBT::successor(Node * p) {
     return y;
 }
 
-int RBT::successor(const int k) {
+template <class T> T RBT<T>::successor(const T k) {
     Node * p = search(root, k);
     if (p == nil)
         return -9999;
     return successor(p)->key;
 }
 
-void RBT::leftRotate(Node * x) { //assume:x->right != nil
+template <class T> void RBT<T>::leftRotate(Node * x) { //assume:x->right != nil
     Node * y = x->right;
     x->right = y->left;
     if (y->left != nil)
@@ -96,7 +146,7 @@ void RBT::leftRotate(Node * x) { //assume:x->right != nil
     x->size = x->right->size + x->left->size + 1;
 }
 
-void RBT::rightRotate(Node * x) { //assume:x->left != nil
+template <class T> void RBT<T>::rightRotate(Node * x) { //assume:x->left != nil
     Node * y = x->left;
     x->left = y->right;
     if (y->right != nil)
@@ -114,7 +164,7 @@ void RBT::rightRotate(Node * x) { //assume:x->left != nil
     x->size = x->right->size + x->left->size + 1;
 }
 
-void RBT::insert(Node * p) {
+template <class T> void RBT<T>::insert(Node * p) {
     if (p == nullptr)
         return ;
     Node * x = root;
@@ -137,7 +187,7 @@ void RBT::insert(Node * p) {
     fixup_insert(p);
 }
 
-void RBT::fixup_insert(Node * p) {
+template <class T> void RBT<T>::fixup_insert(Node * p) {
     while (p->parent->color == RED) {
         if (p->parent == p->parent->parent->left) {
             Node * y = p->parent->parent->right;
@@ -179,7 +229,7 @@ void RBT::fixup_insert(Node * p) {
     root->color = BLACK;
 }
 
-void RBT::transplant(Node * old_t, Node * new_t) {
+template <class T> void RBT<T>::transplant(Node * old_t, Node * new_t) {
     if (old_t->parent == nil)
         root = new_t;
     else if (old_t == old_t->parent->left)
@@ -189,7 +239,7 @@ void RBT::transplant(Node * old_t, Node * new_t) {
     new_t->parent = old_t->parent;
 }
 
-void RBT::fixup_remove(Node * x) {
+template <class T> void RBT<T>::fixup_remove(Node * x) {
     Node * t = x->parent;
     while (t != nil) {
         t->size--;
@@ -253,7 +303,7 @@ void RBT::fixup_remove(Node * x) {
     x->color = BLACK;
 }
 
-void RBT::erase(Node * p) {
+template <class T> void RBT<T>::erase(Node * p) {
     if (p == nil)
         return ;
     Node * y = p;
@@ -288,7 +338,7 @@ void RBT::erase(Node * p) {
         fixup_remove(x);
 }
 
-int RBT::rank(Node * p) {
+template <class T> int RBT<T>::rank(Node * p) {
     int r = p->left->size + 1;
     while (p != root) {
         if (p == p->parent->right) {
@@ -300,7 +350,7 @@ int RBT::rank(Node * p) {
     return r;
 }
 
-int * RBT::rank(const int key) {
+template <class T> int * RBT<T>::rank(const T key) {
     Node * p = search(root, key);
     static int ranks[2]; // ranks[0]: lower_bound, ranks[1]: upper_bound
     if (p == nil) {
@@ -324,7 +374,7 @@ int * RBT::rank(const int key) {
     return ranks;
 }
 
-RBT::Node * RBT::index(Node * p, const int i) {
+template <class T> typename RBT<T>::Node * RBT<T>::index(Node * p, const int i) {
     if (p == nil)
         return p;
     int r = p->left->size;
@@ -336,7 +386,7 @@ RBT::Node * RBT::index(Node * p, const int i) {
         return index(p->right, i - r - 1);
 }
 
-ostream &operator<<(ostream &os, const RBT &t) {
+template <class T> ostream &operator<<(ostream &os, const RBT<T> &t) {
     t.inorderWalk(t.root);
     return os;
 }

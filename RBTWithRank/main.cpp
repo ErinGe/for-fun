@@ -8,11 +8,12 @@
 //
 
 #include <iostream>
-#include "RBTWithRank.hpp"
+#include "RBTWithRank.cpp"
 #include<gtest/gtest.h>
+using namespace std;
 
-RBT CreateTree(int * data, int len) {
-    RBT tree;
+RBT<int> CreateTree(int * data, int len) {
+    RBT<int> tree;
     for (int i = 0; i < len; ++i) {
         tree.insert(*(data + i));
     }
@@ -23,7 +24,7 @@ RBT CreateTree(int * data, int len) {
 TEST(RBTWithRankTest, TestRank) {
     int data[] = {3, 8, 9, 9, 9, 15};
     int len = sizeof(data) / sizeof(data[0]);
-    RBT tree = CreateTree(data, len);
+    RBT<int> tree = CreateTree(data, len);
     
     int * ranks = tree.rank(3);
     EXPECT_EQ(0, *ranks) << "rank(3) lower bound shoud be 0, actual output is " << *ranks << endl;
@@ -45,7 +46,7 @@ TEST(RBTWithRankTest, TestRank) {
 TEST(RBTWithRankTest, TestIndex) {
     int data[] = {3, 8, 9, 9, 9, 15};
     int len = sizeof(data) / sizeof(data[0]);
-    RBT tree = CreateTree(data, len);
+    RBT<int> tree = CreateTree(data, len);
     
     for (int i = 0; i < len; ++i) {
         int output = tree.index(i);
