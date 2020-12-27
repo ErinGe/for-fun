@@ -19,11 +19,12 @@ class RBT {
     struct Node {
         int key;
         bool color;
+        int size;
         Node * left;
         Node * right;
         Node * parent;
-        Node(int k = 0, bool c = BLACK, Node *l = nullptr, Node *r = nullptr, Node *p = nullptr)
-        : key(k), color(c), left(l), right(r), parent(p) {}
+        Node(int k = 0, bool c = BLACK, int s = 0, Node *l = nullptr, Node *r = nullptr, Node *p = nullptr)
+        : key(k), color(c), size(s), left(l), right(r), parent(p) {}
     };
     private :
     Node * nil;
@@ -35,7 +36,7 @@ class RBT {
     void fixup_remove(Node * p);
     void transplant(Node * old_t, Node * new_t);
     void insert(Node * p);
-    void remove(Node * p);
+    void erase(Node * p);
     Node * search(Node * p, const int k);
     Node * minimum(Node * p);
     Node * maximum(Node * p);
@@ -43,8 +44,8 @@ class RBT {
     public :
     RBT() : nil(new Node), root(nil) {}
     ~RBT() {delete nil;}
-    void insert(const int key) {insert(new Node(key, RED, nil, nil, nil));}
-    void remove(const int key) {remove(search(root, key));}
+    void insert(const int key) {insert(new Node(key, RED, 1, nil, nil, nil));}
+    void erase(const int key) {erase(search(root, key));}
     bool search(const int key) {return (search(root, key) == nil ? false : true);}
     int minimum() {return minimum(root)->key;}
     int maximum() {return maximum(root)->key;}

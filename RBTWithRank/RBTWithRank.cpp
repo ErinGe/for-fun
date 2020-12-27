@@ -3,7 +3,7 @@
 //  RBTWithRank
 //
 //  Created by Erin Jane Ge on 12/26/20.
-//  Reference: https://www.cnblogs.com/yxsrt/p/12201788.html
+//  Reference: https://www.cnblogs.com/yxsrt/p/12201788.html, CLRS
 //  Copyright © 2020 Erin Jane Ge. All rights reserved.
 //
 
@@ -84,6 +84,8 @@ void RBT::leftRotate(Node * x) { //assume:x->right != nil
         x->parent->right = y;
     y->left = x;
     x->parent = y;
+    y->size = x->size;
+    x->size = x->right->size + x->left->size + 1;
 }
 
 void RBT::rightRotate(Node * x) { //assume:x->left != nil
@@ -100,6 +102,8 @@ void RBT::rightRotate(Node * x) { //assume:x->left != nil
         x->parent->left = y;
     y->right = x;
     x->parent = y;
+    y->size = x->size;
+    x->size = x->right->size + x->left->size + 1;
 }
 
 void RBT::insert(Node * p) {
@@ -108,6 +112,7 @@ void RBT::insert(Node * p) {
     Node * x = root;
     Node * y = nil;
     while (x != nil) {
+        x->size++;
         y = x;
         if (x->key < p->key)
             x = x->right;
@@ -177,6 +182,11 @@ void RBT::transplant(Node * old_t, Node * new_t) {
 }
 
 void RBT::fixup_remove(Node * x) {
+    Node * t = x->parent;
+    while (t != nil) {
+        t->size--;
+        t = t->parent;
+    }
     Node * z = nil;
     while (x != root && x->color == BLACK) {
         if (x == x->parent->left) {
@@ -235,7 +245,7 @@ void RBT::fixup_remove(Node * x) {
     x->color = BLACK;
 }
 
-void RBT::remove(Node * p) {
+void RBT::erase(Node * p) {
     if (p == nil)
         return ;
     Node * y = p;
