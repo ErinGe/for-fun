@@ -8,11 +8,24 @@
 
 #include <iostream>
 #include "RBTWithRank.hpp"
+#include<gtest/gtest.h>
 
-int main(int argc, const char * argv[]) {
+const int DATA[6] = {3, 8, 9, 9, 9, 15};
+
+TEST(RBTWithRankTest, TestInsertInput) {
     RBT tree;
-    for (int i = 1; i < 7; ++i) {
-        tree.insert(i);
+    int len = sizeof(DATA) / sizeof(DATA[0]);
+    for (int i = 0; i < len; ++i) {
+        tree.insert(DATA[i]);
     }
-    return 0;
+    
+    EXPECT_EQ(15, tree.maximum());
 }
+
+int main(int argc, char * argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    
+    return RUN_ALL_TESTS();
+}
+
+
