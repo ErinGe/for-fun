@@ -42,32 +42,40 @@ RBT::Node * RBT::maximum(Node * p) {
     return p;
 }
 
-int RBT::predecessor(const int k) {
-    Node * p = search(root, k);
-    if (p == nil)
-        return 0;
+RBT::Node * RBT::predecessor(Node * p) {
     if (p->left != nil)
-        return maximum(p->left)->key;
+        return maximum(p->left);
     Node * y = p->parent;
     while (y != nil && y->left == p) {
         p = y;
         y = y->parent;
     }
-    return y->key;
+    return y;
 }
 
-int RBT::successor(const int k) {
+int RBT::predecessor(const int k) {
     Node * p = search(root, k);
     if (p == nil)
-        return 0;
+        return -9999;
+    return predecessor(p)->key;
+}
+
+RBT::Node * RBT::successor(Node * p) {
     if (p->right != nil)
-        return minimum(p->right)->key;
+        return minimum(p->right);
     Node * y = p->parent;
     while (y != nil && y->right == p) {
         p = y;
         y = y->parent;
     }
-    return y->key;
+    return y;
+}
+
+int RBT::successor(const int k) {
+    Node * p = search(root, k);
+    if (p == nil)
+        return -9999;
+    return successor(p)->key;
 }
 
 void RBT::leftRotate(Node * x) { //assume:x->right != nil
@@ -278,6 +286,54 @@ void RBT::erase(Node * p) {
     delete p;
     if (y_originalColor == BLACK)
         fixup_remove(x);
+}
+
+int RBT::rank(Node * p) {
+    int r = p->left->size + 1;
+    while (p != root) {
+        if (p == p->parent->right) {
+            r = r + p->parent->left->size + 1;
+        }
+        p = p->parent;
+    }
+    
+    return r;
+}
+
+int * RBT::rank(const int key) {
+    Node * p = search(root, key);
+    static int ranks[2]; // ranks[0]: lower_bound, ranks[1]: upper_bound
+    if (p == nil) {
+        ranks[0] = ranks[1] = -1;
+        return ranks;
+    }
+    Node * pr = predecessor(p);
+    Node * s = successor(p);
+    Node * p_copy = p;
+    while (pr->key == key) {
+        p = pr;
+        pr = predecessor(p);
+    }
+    ranks[0] = rank(p) - 1;
+    while (s->key == key) {
+        p_copy = s;
+        s = successor(p_copy);
+    }
+    ranks[1] = rank(p_copy) - 1;
+    
+    return ranks;
+}
+
+RBT::Node * RBT::index(Node * p, const int i) {
+    if (p == nil)
+        return p;
+    int r = p->left->size;
+    if (r == i)
+        return p;
+    else if (i < r)
+        return index(p->left, i);
+    else
+        return index(p->right, i - r - 1);
 }
 
 ostream &operator<<(ostream &os, const RBT &t) {

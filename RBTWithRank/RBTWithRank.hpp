@@ -23,7 +23,7 @@ class RBT {
         Node * left;
         Node * right;
         Node * parent;
-        Node(int k = 0, bool c = BLACK, int s = 0, Node *l = nullptr, Node *r = nullptr, Node *p = nullptr)
+        Node(int k = -9999, bool c = BLACK, int s = 0, Node *l = nullptr, Node *r = nullptr, Node *p = nullptr)
         : key(k), color(c), size(s), left(l), right(r), parent(p) {}
     };
     private :
@@ -41,6 +41,10 @@ class RBT {
     Node * minimum(Node * p);
     Node * maximum(Node * p);
     void inorderWalk(Node * p) const;
+    Node * successor(Node * p);
+    Node * predecessor(Node * p);
+    int rank(Node * p);
+    Node * index(Node * p, const int k);
     public :
     RBT() : nil(new Node), root(nil) {}
     ~RBT() {delete nil;}
@@ -51,6 +55,8 @@ class RBT {
     int maximum() {return maximum(root)->key;}
     int predecessor(const int key);
     int successor(const int key);
+    int * rank(const int key);
+    int index(const int key) {return index(root, key)->key;};
     
     friend ostream &operator<<(ostream &os, const RBT &t);
 };
