@@ -12,6 +12,7 @@ using namespace std;
 
 template <class T>
 class RBT {
+    //error code for key: -9999, error code for index: -1
     private :
     enum {RED = 0, BLACK};
     struct Node {

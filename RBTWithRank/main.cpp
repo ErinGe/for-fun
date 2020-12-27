@@ -64,10 +64,18 @@ TEST(RBTWithRankTest, TestDouble) {
     EXPECT_EQ(2, *ranks) << "rank(9.1) lower bound shoud be 2, actual output is " << *ranks << endl;
     EXPECT_EQ(4, *(ranks + 1)) << "rank(9.1) upper bound shoud be 4, actual output is " << *(ranks + 1) << endl;
     
+    ranks = tree.rank(1.5);
+    EXPECT_EQ(-1, *ranks) << "rank(9.1) lower bound shoud be 2, actual output is " << *ranks << endl;
+    EXPECT_EQ(-1, *(ranks + 1)) << "rank(9.1) upper bound shoud be 4, actual output is " << *(ranks + 1) << endl;
+    
     for (int i = 0; i < len; ++i) {
         double output = tree.index(i);
-        EXPECT_EQ(*(data + i), output) << "index(" << i << ") should be" << *(data + i) << ", actual output is  " << output << endl;
+        EXPECT_EQ(*(data + i), output) << "index(" << i << ") should be " << *(data + i) << ", actual output is  " << output << endl;
     }
+    
+    double output = tree.index(10);
+    EXPECT_EQ(-9999, output) << "index(10) should be -9999, actual output is " << output << endl;
+    
 }
 
 int main(int argc, char * argv[]) {
