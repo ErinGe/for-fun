@@ -12,8 +12,9 @@
 #include<gtest/gtest.h>
 using namespace std;
 
-RBT<int> CreateTree(int * data, int len) {
-    RBT<int> tree;
+template<typename T>
+RBT<T> CreateTree(T * data, int len) {
+    RBT<T> tree;
     for (int i = 0; i < len; ++i) {
         tree.insert(*(data + i));
     }
@@ -50,6 +51,21 @@ TEST(RBTWithRankTest, TestIndex) {
     
     for (int i = 0; i < len; ++i) {
         int output = tree.index(i);
+        EXPECT_EQ(*(data + i), output) << "index(" << i << ") should be" << *(data + i) << ", actual output is  " << output << endl;
+    }
+}
+
+TEST(RBTWithRankTest, TestDouble) {
+    double data[] = {3.1, 8.1, 9.1, 9.1, 9.1, 15.1};
+    int len = sizeof(data) / sizeof(data[0]);
+    RBT<double> tree = CreateTree(data, len);
+    
+    int * ranks = tree.rank(9.1);
+    EXPECT_EQ(2, *ranks) << "rank(9.1) lower bound shoud be 2, actual output is " << *ranks << endl;
+    EXPECT_EQ(4, *(ranks + 1)) << "rank(9.1) upper bound shoud be 4, actual output is " << *(ranks + 1) << endl;
+    
+    for (int i = 0; i < len; ++i) {
+        double output = tree.index(i);
         EXPECT_EQ(*(data + i), output) << "index(" << i << ") should be" << *(data + i) << ", actual output is  " << output << endl;
     }
 }
